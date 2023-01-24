@@ -84,6 +84,11 @@ public class UofUStudent {
 			return false;
 		}
 
+//		if (this.UofUstudent == other){
+//			return true;
+//		} else {
+//			return false;
+//		}
 		UofUStudent rhs = (UofUStudent) other;
 		UofUStudent lhs = this;
 

@@ -34,13 +34,15 @@ public class CS2420Class {
 	 *         false if the student was not added because they already exist in the collection
 	 */
 	public boolean addStudent(CS2420Student student) {
-		// FILL IN -- do not return false unless appropriate
 		if(!(student instanceof CS2420Student)) {
 			return false;
 		}
+
+		// Return false if student already exists in the class
 		if(lookup(student.getUNID()) != null) {
 			return false;
 		}
+
 		studentList.add(student);
 		return true;
 	}
@@ -52,7 +54,6 @@ public class CS2420Class {
 	 * @return the CS 2420 student with the given uNID, or null if no such student exists in the collection
 	 */
 	public CS2420Student lookup(int uNID) {
-		// FILL IN -- do not return null, unless appropriate
 		for (int i = 0; i < this.studentList.size(); i++) {
 			if(this.studentList.get(i).getUNID() == uNID) {
 				return this.studentList.get(i);
@@ -69,9 +70,8 @@ public class CS2420Class {
 	 * 	     or an empty list if no such students exist in the collection
 	 */
 	public ArrayList<CS2420Student> lookup(EmailAddress contactInfo) {
-		// FILL IN -- do not return null
-
 		ArrayList<CS2420Student> matchedStudents = new ArrayList<>();
+
 		for (int i = 0; i < this.studentList.size(); i++) {
 			if (this.studentList.get(i).getContactInfo().toString().equals(contactInfo.toString())) {
 				matchedStudents.add(this.studentList.get(i));
@@ -91,27 +91,13 @@ public class CS2420Class {
 	 * @param category - the category in which to add the score
 	 */
 	public void addScore(int uNID, double score, String category) {
-		// FILL IN
 		CS2420Student student;
 		if(lookup(uNID) != null) {
 			student = lookup(uNID);
 		} else {
 			return;
 		}
-
-		switch(category) {
-			case "assignment":
-				student.addScore(score, category);
-				break;
-			case "exam":
-				student.addScore(score, category);
-				break;
-			case "lab":
-				student.addScore(score, category);
-				break;
-			case "quiz":
-				student.addScore(score, category);
-		}
+		student.addScore(score, category);
 	}
 	
 	/**
@@ -120,11 +106,15 @@ public class CS2420Class {
 	 * @return the average score, or 0 if there are no students in the collection
 	 */
 	public double computeClassAverage() {
-		// FILL IN -- do not return 0, unless appropriate
-		for (int i = 0; i < studentList.size(); i++) {
-
+		if (studentList.size() == 0) {
+			return 0;
 		}
-		return 0;
+		double classSum = 0;
+		for (int i = 0; i < studentList.size(); i++) {
+			classSum += studentList.get(i).computeFinalScore();
+		}
+
+		return classSum/studentList.size();
 	}
 	
 	/**
@@ -135,7 +125,19 @@ public class CS2420Class {
 	public ArrayList<EmailAddress> getContactList() {
 		// FILL IN -- do not return null
 		ArrayList<EmailAddress> emailAddresses = new ArrayList<>();
-
+//
+//		emailAddresses.add(studentList.get(0).getContactInfo());
+//		for (int i = 1; i < studentList.size(); i++) {
+//			EmailAddress firstEmail = studentList.get(i).getContactInfo();
+//			for (int j = 0; j < emailAddresses.size(); j++) {
+//				EmailAddress secondEmail = studentList.get(j).getContactInfo();
+//				if (firstEmail.equals(secondEmail)) {
+//					continue;
+//				}
+//
+//			}
+//			emailAddresses.add(firstEmail);
+//		}
 
 		for (int i = 0; i < studentList.size(); i++) {
 			emailAddresses.add(studentList.get(i).getContactInfo());

@@ -4,15 +4,17 @@ public class CS2420Student extends UofUStudent {
 
     private EmailAddress contactInfo;
 
+    // nested class to be used for each category of assignments
     private class CourseWork {
         private double score;
         private int count;
 
         private double computeAvg() {
-            return score/(count * 100);
+            return score/count;
         }
     }
 
+    // CourseWork objects for each assignment
     private CourseWork assignments = new CourseWork();
     private CourseWork quizzes = new CourseWork();
     private CourseWork labs = new CourseWork();
@@ -38,7 +40,7 @@ public class CS2420Student extends UofUStudent {
 
     public void addScore(double score, String category) {
         switch(category) {
-            case "assigment":
+            case "assignment":
                 assignments.score += score;
                 assignments.count++;
                 break;
@@ -58,34 +60,43 @@ public class CS2420Student extends UofUStudent {
     }
 
     public double computeFinalScore() {
+        // check if student has turned in at least one assignment per category, otherwise return 0;
+        if (exams.count == 0 || quizzes.count == 0 || labs.count == 0||assignments.count==0) {
+            return 0;
+        }
+
         // if exam average is below 65%, return exam average as final score;
-        if (exams.computeAvg() < 0.65) {
-            return exams.computeAvg() * 100;
+        if (exams.computeAvg() < 65) {
+            return exams.computeAvg();
         }
 
-        System.out.println(assignments.score);
-        System.out.println(quizzes.score);
-        System.out.println(labs.score);
-        System.out.println(exams.score);
-        // Create array to loop over and check for any 0s
-        CourseWork[] scores = new CourseWork[] {assignments, exams, quizzes, labs};
-        double studentScore = 0;
-        for (CourseWork category : scores) {
-            System.out.println(category.score);
-            if(category.score == 0) {
-                return 0;
-            } else {
-
-                studentScore += category.computeAvg();
-            }
-        }
+        // compute weighted average;
+        double finalScore =(exams.computeAvg()*.4)+
+                (assignments.computeAvg()*.4)+
+                (labs.computeAvg()*.1)+
+                (quizzes.computeAvg()*.1);
 
 
-        return (studentScore / scores.length) ;
+        return finalScore;
     }
 
     public String computeFinalGrade() {
-        return "";
+        if (exams.count == 0 || quizzes.count == 0 || labs.count == 0||assignments.count==0) {
+            return "N/A";
+        }
+
+        double fScore = computeFinalScore();
+
+        double [] threshold = new double[] {93,90,87,83,80,77,73,70,67,63,60};
+        String [] letterGrade = new String[] {"A","A-","B+","B","B-","C+","C","C-","D+","D","D-"};
+
+        for (int i = 0; i < threshold.length; i++) {
+            if (fScore >= threshold[i]) {
+                return letterGrade[i];
+            }
+        }
+
+        return "E";
     }
 
 }
